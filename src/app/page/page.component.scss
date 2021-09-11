@@ -1,0 +1,78 @@
+.root {
+  padding: 20px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.controls {
+  display: flex;
+}
+
+.control-item {
+  & + & {
+    margin-left: 20px;
+  }
+
+  &.-middle {
+    align-self: center;
+  }
+}
+
+.rules {
+  width: 600px;
+  height: 100px;
+  padding: 10px;
+}
+
+.board {
+  margin-top: 15px;
+}
+
+.board-data {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.board-item {
+  border: 1px solid;
+  width: 180px;
+  height: 150px;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.board-key {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-issue {
+  margin-top: auto;
+}
+
+.percent-line {
+  margin-top: auto;
+  background: #f3f3f3;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.percent {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #4caf50;
+}
+
+.percent-text {
+  position: relative;
+  z-index: 2;
+}

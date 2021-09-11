@@ -1,0 +1,44 @@
+<div class="root">
+  <div class="controls">
+    <div class="control-item">
+      <p>Worklogs</p>
+      <textarea [formControl]="workLogControl" placeholder="Worklogs"></textarea>
+    </div>
+
+    <div class="control-item -middle">
+      <label>
+        <input type="checkbox" [formControl]="groupByIssueControl">
+        Is Group by issue
+      </label>
+    </div>
+
+    <!--div class="control-item">
+      <p>Grouping Rules</p>
+      <textarea class="rules"></textarea>
+    </div-->
+  </div>
+
+  <div *ngIf="boardData$ | async as boardData" class="board">
+    <h3>{{ (boardData.time / 60).toFixed(2) }}</h3>
+
+    <div class="board-data">
+      <div *ngFor="let item of boardData.logs" class="board-item">
+        <div class="board-key" [title]="item.key">{{ item.key }}</div>
+        <div class="board-issue">{{ item.issue }}</div>
+        <div>{{ (item.time / 60).toFixed(2) }}</div>
+        <div class="percent-line">
+          <div class="percent" style="width: {{ item.percent * 2 }}%"></div>
+          <span class="percent-text">{{ item.percent.toFixed(2) }}%</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="table">
+    <div *ngFor="let item of logs$ | async" class="tr">
+      {{ item | json }}
+    </div>
+  </div>
+</div>
+
