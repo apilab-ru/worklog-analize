@@ -37,9 +37,23 @@
 
 .board-item {
   border: 1px solid;
+  margin: 5px;
+
+  &.-opened {
+    .board-item-list {
+      display: block;
+    }
+  }
+}
+
+.board-item-list {
+  overflow: hidden;
+  display: none;
+}
+
+.board-item-data {
   width: 180px;
   height: 150px;
-  margin: 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;

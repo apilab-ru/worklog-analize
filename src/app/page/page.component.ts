@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { AnalyzerService } from '../services/analyzer.service';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { GroupedLog, LogDetail, TotalCalc } from '../interfaces';
 import { map, startWith } from 'rxjs/operators';
 
@@ -22,6 +22,7 @@ export class PageComponent implements OnInit {
 
   logs$: Observable<LogDetail[]> | undefined;
   boardData$: Observable<TotalCalc> | undefined;
+  openedItem$ = new BehaviorSubject<string | null>(null);
 
   constructor(
     private analyzerService: AnalyzerService,
@@ -56,6 +57,14 @@ export class PageComponent implements OnInit {
     ]).pipe(
       map(([groupByIssue, logs]) => this.analyzerService.boardGroup(logs, !!groupByIssue))
     );
+  }
+
+  toggleItem(key: string): void {
+    if (this.openedItem$.getValue() === key) {
+      return this.openedItem$.next(null);
+    }
+
+    this.openedItem$.next(key);
   }
 
   private getControl(name: string): AbstractControl {

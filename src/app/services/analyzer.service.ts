@@ -56,7 +56,7 @@ export class AnalyzerService {
         ...prev,
         [key]: {
           issue: item.issue,
-          logs: (prevItem ? [...prevItem.logs, item] : [item]),
+          logs: (prevItem ? [...prevItem.logs, item] : (groupByIssue ? [item] : [...item.deps, item])),
           time: (prevItem ? prevItem.time : 0) + item.time,
           key: key.split('/-/')[0],
         },
