@@ -9,6 +9,10 @@ export class AnalyzerService {
   }
 
   convertLogs(list: ImportLog[]): Log[] {
+    if (!list) {
+      return [];
+    }
+
     return list.map((res) => ({
       issue: res[0],
       comment: res[1],

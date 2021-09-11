@@ -16,3 +16,7 @@ document.querySelector('#timeSheetContent').querySelectorAll('tr').forEach(tr =>
   list.push(item);
 });
 copy(list.slice(1, list.length - 2));
+
+## Github publish
+ng build --prod --base-href "https://apilab-ru.github.io/worklog-analize/
+npx angular-cli-ghpages --dir=dist/worklog-analize

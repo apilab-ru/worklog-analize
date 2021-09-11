@@ -48,7 +48,7 @@ export class PageComponent implements OnInit {
       rawLogs$,
       this.getControlChanges('rules'),
     ]).pipe(
-      map(([logs, rules]) => this.analyzerService.groupLogs(logs, rules.split('\n'))),
+      map(([logs, rules]) => this.analyzerService.groupLogs(logs, this.decodeRules(rules))),
     );
 
     this.boardData$ = combineLatest([
@@ -65,6 +65,14 @@ export class PageComponent implements OnInit {
     }
 
     this.openedItem$.next(key);
+  }
+
+  private decodeRules(rules: string | null): string[] {
+    if (!rules) {
+      return [];
+    }
+
+    return rules.split('\n');
   }
 
   private getControl(name: string): AbstractControl {
