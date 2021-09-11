@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ImportLog, Log, LogDetail } from '../interfaces';
+import { GroupedLog, ImportLog, Log, LogDetail, Rule, TotalCalc } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -16,22 +16,9 @@ export class AnalyzerService {
     }))
   }
 
-  saveLogs(list: ImportLog[]): void {
-    localStorage.setItem('a-logs-imports', JSON.stringify(list));
-  }
-
-  getLogs(): ImportLog[] {
-    const cache = localStorage.getItem('a-logs-imports');
-    if (cache) {
-      return JSON.parse(cache);
-    }
-
-    return [];
-  }
-
-  groupLogs(list: Log[]): LogDetail[] {
+  groupLogs(list: Log[], rawRules: string[]): LogDetail[] {
     const mapLogs = list.reduce((prev, item) => {
-      const key = this.getKey(item);
+      const key = this.getKey(item, this.parserRules(rawRules));
       return {
         ...prev,
         [key]: {
@@ -54,41 +41,78 @@ export class AnalyzerService {
     return listResult;
   }
 
-  private getKey(item: Log): string {
-    if (item.issue.includes('ADULT-1818')) {
-      return 'ADULT-1818';
+  boardGroup(list: LogDetail[] | null, groupByIssue: boolean): TotalCalc {
+    if (!list) {
+      return { time: 0, logs: [] };
     }
 
+    const mapLogs: { [key: string]: GroupedLog } = list.reduce((prev, item) => {
+      const key = groupByIssue ? item.issue.split(' -')[0] : item.key;
+
+      // @ts-ignore
+      const prevItem = prev[key] as GroupedLog | undefined;
+
+      return {
+        ...prev,
+        [key]: {
+          issue: item.issue,
+          logs: (prevItem ? [...prevItem.logs, item] : [item]),
+          time: (prevItem ? prevItem.time : 0) + item.time,
+          key: key.split('/-/')[0],
+        },
+      };
+    }, {});
+
+    const resultList = [];
+    for (let i in mapLogs) {
+      resultList.push(mapLogs[i]);
+    }
+
+    const time = resultList.reduce((prev, item) => prev + item.time, 0);
+
+    return {
+      time,
+      logs: resultList.map(item => ({
+        ...item,
+        percent: item.time / time * 100,
+      })).sort((a, b) => b.percent - a.percent),
+    };
+  }
+
+  private getKey(item: Log, rules: Rule[]): string {
     const comment = item.comment.toLowerCase().trim();
 
-    if (comment.includes('techreview')) {
-      return 'techreview';
+    let key;
+    for(let i in rules) {
+      const rule = rules[i];
+
+      // includes
+      const field = rule.field === 'comment' ? comment : (item[rule.field] as string);
+      if (rule.values.some(value => field.includes(value))) {
+        key = rule.key;
+        break;
+      }
     }
 
-    if (comment.includes('кандидат')) {
-      return 'кандидат';
-    }
-
-    if (comment.includes('codereview')) {
-      return 'codereview';
-    }
-
-    if (comment.includes('груминг')) {
-      return 'груминг';
-    }
-
-    if (comment.includes('онбординг')) {
-      return 'онбординг';
-    }
-
-    if (comment.includes('slack') || comment.includes('chats')) {
-      return 'slack';
-    }
-
-    if (comment.includes('собес')) {
-      return 'собес';
+    if (key) {
+      return key;
     }
 
     return comment + '/-/' + item.issue + ' - ';
+  }
+
+  private parserRules(rawRules: string[]): Rule[] {
+    return rawRules.map(item => {
+      const [action, other] = item.split('|');
+      const [field, value] = other.split(':');
+      const values = value.split(',');
+
+      return {
+        action,
+        field,
+        values,
+        key: value
+      } as Rule
+    })
   }
 }

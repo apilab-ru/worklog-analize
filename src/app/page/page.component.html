@@ -1,21 +1,21 @@
 <div class="root">
-  <div class="controls">
+  <div class="controls" [formGroup]="formGroup">
     <div class="control-item">
       <p>Worklogs</p>
-      <textarea [formControl]="workLogControl" placeholder="Worklogs"></textarea>
+      <textarea formControlName="workLogControl" placeholder="Worklogs"></textarea>
     </div>
 
     <div class="control-item -middle">
       <label>
-        <input type="checkbox" [formControl]="groupByIssueControl">
+        <input type="checkbox" formControlName="groupByIssueControl">
         Is Group by issue
       </label>
     </div>
 
-    <!--div class="control-item">
+    <div class="control-item">
       <p>Grouping Rules</p>
-      <textarea class="rules"></textarea>
-    </div-->
+      <textarea class="rules" formControlName="rules"></textarea>
+    </div>
   </div>
 
   <div *ngIf="boardData$ | async as boardData" class="board">

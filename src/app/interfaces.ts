@@ -2,7 +2,6 @@ export interface Log {
   issue: string;
   comment: string;
   time: number;
-
 }
 
 export interface LogDetail extends Log {
@@ -15,6 +14,13 @@ export interface GroupedLog {
   logs: LogDetail[];
   time: number;
   percent: number;
+  key: string;
+}
+
+export interface Rule {
+  action: 'includes',
+  field: keyof Log,
+  values: string[],
   key: string;
 }
 
