@@ -17,6 +17,7 @@ export class PageComponent implements OnInit {
   formGroup = new FormGroup({
     workLogControl: new FormControl(),
     groupByIssueControl: new FormControl(false),
+    skipGroupByTask: new FormControl(false),
     rules: new FormControl(),
   })
 
@@ -47,8 +48,9 @@ export class PageComponent implements OnInit {
     this.logs$ = combineLatest([
       rawLogs$,
       this.getControlChanges('rules'),
+      this.getControlChanges('skipGroupByTask'),
     ]).pipe(
-      map(([logs, rules]) => this.analyzerService.groupLogs(logs, this.decodeRules(rules))),
+      map(([logs, rules, skipGroupByTask ]) => this.analyzerService.groupLogs(logs, this.decodeRules(rules), !!skipGroupByTask)),
     );
 
     this.boardData$ = combineLatest([

@@ -6,11 +6,19 @@
   margin-top: 20px;
 }
 
+.work-logs-area {
+  width: 600px;
+  height: 115px;
+}
+
 .controls {
   display: flex;
 }
 
 .control-item {
+  display: flex;
+  flex-direction: column;
+
   & + & {
     margin-left: 20px;
   }
@@ -89,4 +97,11 @@
 .percent-text {
   position: relative;
   z-index: 2;
+}
+
+.script-export {
+  margin: 0;
+  width: 660px;
+  height: 182px;
+  padding: 15px;
 }

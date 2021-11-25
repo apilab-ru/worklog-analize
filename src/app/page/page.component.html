@@ -2,13 +2,18 @@
   <div class="controls" [formGroup]="formGroup">
     <div class="control-item">
       <p>Worklogs</p>
-      <textarea formControlName="workLogControl" placeholder="Worklogs"></textarea>
+      <textarea class="work-logs-area" formControlName="workLogControl" placeholder="Worklogs"></textarea>
     </div>
 
     <div class="control-item -middle">
       <label>
         <input type="checkbox" formControlName="groupByIssueControl">
-        Is Group by issue
+        Top level group by task
+      </label>
+
+      <label>
+        <input type="checkbox" formControlName="skipGroupByTask">
+        Group by comment without task
       </label>
     </div>
 
@@ -29,7 +34,7 @@
       >
         <div class="board-item-data">
           <div class="board-key" [title]="item.key">{{ item.key }}</div>
-          <div class="board-issue">{{ item.issue }}</div>
+          <div *ngIf="formGroup.get('groupByIssueControl')?.value" class="board-issue">{{ item.issue }}</div>
           <div>{{ (item.time / 60).toFixed(2) }}</div>
           <div class="percent-line">
             <div class="percent" style="width: {{ item.percent * 2 }}%"></div>
@@ -53,5 +58,18 @@
       {{ item | json }}
     </div>
   </div-->
+  <h2>Скрипт импорта</h2>
+  <textarea class="script-export">
+    let list = [];
+    document.querySelector('#wtcalendar-content')
+        .contentWindow.document.querySelector('#timeSheetContent')
+        .querySelectorAll('tr').forEach(tr => {
+    let item = [].reduce.bind(tr.querySelectorAll('td'))((prev, item, index) => ({
+        ...prev, [index]: item.textContent
+      }), {});
+      list.push(item);
+    });
+    copy(list.slice(1, list.length - 2));
+  </textarea>
 </div>
 

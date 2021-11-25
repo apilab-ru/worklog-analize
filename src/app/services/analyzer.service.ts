@@ -5,9 +5,6 @@ import { GroupedLog, ImportLog, Log, LogDetail, Rule, TotalCalc } from '../inter
   providedIn: 'root',
 })
 export class AnalyzerService {
-  constructor() {
-  }
-
   convertLogs(list: ImportLog[]): Log[] {
     if (!list) {
       return [];
@@ -20,9 +17,9 @@ export class AnalyzerService {
     }))
   }
 
-  groupLogs(list: Log[], rawRules: string[]): LogDetail[] {
+  groupLogs(list: Log[], rawRules: string[], skipGroupByTask = false): LogDetail[] {
     const mapLogs = list.reduce((prev, item) => {
-      const key = this.getKey(item, this.parserRules(rawRules));
+      const key = this.getKey(item, this.parserRules(rawRules), skipGroupByTask);
       return {
         ...prev,
         [key]: {
@@ -83,7 +80,7 @@ export class AnalyzerService {
     };
   }
 
-  private getKey(item: Log, rules: Rule[]): string {
+  private getKey(item: Log, rules: Rule[], skipGroupByTask = false): string {
     const comment = item.comment.toLowerCase().trim();
 
     let key;
@@ -102,14 +99,27 @@ export class AnalyzerService {
       return key;
     }
 
+    if (skipGroupByTask) {
+      return 'development';
+    }
+
     return comment + '/-/' + item.issue + ' - ';
   }
 
   private parserRules(rawRules: string[]): Rule[] {
     return rawRules.map(item => {
       const [action, other] = item.split('|');
+
+      if (!other) {
+        return null;
+      }
+
       const [field, value] = other.split(':');
-      const values = value.split(',');
+      const values = value?.split(',');
+
+      if (!values) {
+        return null;
+      }
 
       return {
         action,
@@ -117,6 +127,10 @@ export class AnalyzerService {
         values,
         key: value
       } as Rule
-    })
+    }).filter(this.typeFilter)
+  }
+
+  private typeFilter(it: Rule | null): it is Rule {
+    return !!it;
   }
 }

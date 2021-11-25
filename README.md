@@ -9,7 +9,9 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 ## Script parser logs
 
 let list = [];
-document.querySelector('#timeSheetContent').querySelectorAll('tr').forEach(tr => {
+document.querySelector('#wtcalendar-content')
+    .contentWindow.document.querySelector('#timeSheetContent')
+    .querySelectorAll('tr').forEach(tr => {
   let item = [].reduce.bind(tr.querySelectorAll('td'))((prev, item, index) => ({
     ...prev, [index]: item.textContent
   }), {});
