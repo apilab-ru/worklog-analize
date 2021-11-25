@@ -20,5 +20,9 @@ document.querySelector('#wtcalendar-content')
 copy(list.slice(1, list.length - 2));
 
 ## Github publish
+Use token 
+git remote set-url origin https://[USERNAME]:[TOKEN]@git.mycompany.com/[ORGANIZATION]/[REPO].git
+git remote set-url origin https://[USERNAME]:[TOKEN]@github.com/apilab-ru/worklog-analize
+
 ng build --prod --base-href "https://apilab-ru.github.io/worklog-analize/
 npx angular-cli-ghpages --dir=dist/worklog-analize
