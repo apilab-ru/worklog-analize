@@ -11,7 +11,12 @@
         }), {});
         list.push(item);
       });
-      copy(list.slice(1, list.length - 2));
+      let clearedList = list.slice(1, list.length - 2).map(item => ([
+        item['0'] + ' - ' + item['1'],
+        item['2'],
+        item['3'],
+      ]))
+      copy(clearedList);
       </textarea>
   </div>
 

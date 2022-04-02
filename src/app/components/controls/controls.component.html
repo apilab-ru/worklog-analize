@@ -1,10 +1,17 @@
 <div class="controls" [formGroup]="formGroup">
   <div class="control-item">
-    <h2 class="title">Worklogs</h2>
+    <h2 class="title">
+      Worklogs
+
+      <div class="help">
+        Format: [["Issue", "Comment", "Hours"]]
+      </div>
+    </h2>
     <textarea class="work-logs-area" formControlName="workLogControl" placeholder="Worklogs"></textarea>
   </div>
 
   <div class="control-item -middle">
+    <h2>Group by</h2>
     <label>
       <mat-checkbox formControlName="groupByTask">
         Group by task-key
@@ -25,7 +32,17 @@
   </div>
 
   <div class="control-item">
-    <h2 class="title">Grouping Rules</h2>
+    <h2 class="title">
+      Grouping Rules
+
+<pre class="help">
+  includes|(issue or comment):string with ','|optional name
+
+  examples:
+  includes|comment:slack,chats,коммуникации,уточн,разыскивал|slack
+  includes|issue:ADULT-1818|Tolks topics
+</pre>
+    </h2>
     <textarea class="rules" formControlName="rules"></textarea>
   </div>
 </div>
