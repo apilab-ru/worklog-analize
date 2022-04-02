@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GroupedLog, ImportLog, Log, LogDetail, Rule, TotalCalc } from '../interfaces';
+import { GroupConfig, GroupedLog, ImportLog, Log, LogDetail, Rule, TotalCalc } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +17,9 @@ export class AnalyzerService {
     }))
   }
 
-  groupLogs(list: Log[], rawRules: string[], skipGroupByTask = false): LogDetail[] {
+  groupLogs(list: Log[], rules: Rule[], groupConfig: GroupConfig): LogDetail[] {
     const mapLogs = list.reduce((prev, item) => {
-      const key = this.getKey(item, this.parserRules(rawRules), skipGroupByTask);
+      const { key, name } = this.getKey(item, rules, groupConfig);
       return {
         ...prev,
         [key]: {
@@ -27,19 +27,16 @@ export class AnalyzerService {
           // @ts-ignore
           time: (prev[key] ? prev[key].time : 0) + item.time,
           // @ts-ignore
-          deps: (prev[key] ? [...prev[key].deps, item] : []),
+          deps: (prev[key] ? [...prev[key].deps, item] : [item]),
           key,
+          name
         }
       }
     }, {});
 
-    const listResult = [];
-    for(let i in mapLogs) {
-      // @ts-ignore
-      listResult.push(mapLogs[i]);
-    }
-
-    return listResult;
+    const result = Object.values(mapLogs) as LogDetail[];
+    result.sort((a, b) => b.time - a.time)
+    return result;
   }
 
   boardGroup(list: LogDetail[] | null, groupByIssue: boolean): TotalCalc {
@@ -80,35 +77,42 @@ export class AnalyzerService {
     };
   }
 
-  private getKey(item: Log, rules: Rule[], skipGroupByTask = false): string {
+  private getKey(item: Log, rules: Rule[], groupConfig: GroupConfig): { key: string, name?: string } {
+    let key = '';
     const comment = item.comment.toLowerCase().trim();
 
-    let key;
-    for(let i in rules) {
-      const rule = rules[i];
+    if (groupConfig.groupByTask) {
+      key += item.issue;
+    }
 
-      // includes
-      const field = rule.field === 'comment' ? comment : (item[rule.field] as string);
-      if (rule.values.some(value => field.includes(value))) {
-        key = rule.key;
-        break;
+    if (groupConfig.groupByComment) {
+      key += comment;
+    }
+
+    let name;
+    if (groupConfig.groupByRules) {
+      for(let i in rules) {
+        const rule = rules[i];
+
+        // includes
+        const field = rule.field === 'comment' ? comment : (item[rule.field] as string);
+        if (rule.values.some(value => field.includes(value))) {
+          key += rule.key;
+          name = rule.name;
+          break;
+        }
       }
     }
 
-    if (key) {
-      return key;
-    }
-
-    if (skipGroupByTask) {
-      return 'development';
-    }
-
-    return comment + '/-/' + item.issue + ' - ';
+    return {
+      key: key || 'develop',
+      name,
+    };
   }
 
-  private parserRules(rawRules: string[]): Rule[] {
+  parserRules(rawRules: string[]): Rule[] {
     return rawRules.map(item => {
-      const [action, other] = item.split('|');
+      const [action, other, name] = item.split('|');
 
       if (!other) {
         return null;
@@ -125,7 +129,8 @@ export class AnalyzerService {
         action,
         field,
         values,
-        key: value
+        key: value,
+        name
       } as Rule
     }).filter(this.typeFilter)
   }

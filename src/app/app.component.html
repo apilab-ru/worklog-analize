@@ -1,1 +1,27 @@
-<app-page></app-page>
+<div class="menu">
+  <h1 class="title">Worklog Analyze</h1>
+
+  <div class="navigation">
+    <a
+      *ngFor="let item of menu"
+      mat-button
+      class="link"
+      [routerLink]="item.path"
+      [routerLinkActiveOptions]="{exact: true}"
+      [routerLinkActive]="'-active'"
+    >
+      {{ item.data?.name }}
+    </a>
+  </div>
+
+  <a mat-button class="link" target="_blank" [href]="githubLink">
+    <img class="icon" src="assets/github-circle-white-transparent.svg">
+    GitHub
+  </a>
+</div>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
+<div class="footer">
+
+</div>

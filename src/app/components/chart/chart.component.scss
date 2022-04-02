@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  border-radius: 2px;
+}
+
+.chart {
+  width: 300px;
+  height: 300px;
+}
+
+.legend {
+  margin-left: 24px;
+  max-height: 600px;
+  overflow: auto;
+  background: #fff;
+  padding: 12px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
+  & + & {
+    margin-top: 4px;
+  }
+}
+
+.color {
+  display: inline-block;
+  width: 20px;
+  height: 16px;
+}
+
+.percent {
+  margin-left: 4px;
+  width: 52px;
+}
+
+.title {
+  margin-left: 4px;
+}
+
+.details {
+  line-height: 24px;
+  margin: -6px 0 -6px auto;
+}

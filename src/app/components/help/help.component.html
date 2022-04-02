@@ -1,0 +1,27 @@
+<div class="help">
+  <div class="row">
+    <h2>Скрипт импорта</h2>
+    <textarea class="script-export">
+      let list = [];
+      document.querySelector('iframe')
+          .contentWindow.document.querySelector('#reportContent')
+          .querySelectorAll('tr').forEach(tr => {
+      let item = [].reduce.bind(tr.querySelectorAll('td'))((prev, item, index) => ({
+          ...prev, [index]: item.textContent
+        }), {});
+        list.push(item);
+      });
+      copy(list.slice(1, list.length - 2));
+      </textarea>
+  </div>
+
+  <div class="row">
+    <h2>Конфигурация в Jira</h2>
+    <a
+      target="_blank"
+      href="https://jira.skyeng.tech/plugins/servlet/wtc-iframe?urlPath=workcalendar&decorator=atl.general&titleKey=wtc.common.labels.appName">
+      Ссылка на календарь
+    </a>
+    <img class="help-image" src="assets/jira-configuration.jpg">
+  </div>
+</div>

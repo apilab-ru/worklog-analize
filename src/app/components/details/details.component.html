@@ -1,0 +1,21 @@
+<div class="root">
+  <h2 class="title">{{ data.item.name || data.item.key }} {{ data.item.hours }}h</h2>
+
+  <table class="table">
+    <tr>
+      <td>Hours</td>
+      <td>Local</td>
+      <td>Global</td>
+      <td>Issue</td>
+      <td>Comment</td>
+    </tr>
+
+    <tr *ngFor="let item of items" class="item">
+      <td [matTooltip]="item.time + 'm'">{{ item.hours }}</td>
+      <td>{{ item.percentLocal }}%</td>
+      <td>{{ item.percentGlobal }}%</td>
+      <td>{{ item.issue }}</td>
+      <td>{{ item.comment }}</td>
+    </tr>
+  </table>
+</div>

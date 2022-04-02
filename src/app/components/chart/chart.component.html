@@ -1,0 +1,17 @@
+<div class="root">
+  <div class="chart">
+    <canvas #chart></canvas>
+  </div>
+
+  <div class="legend">
+    <div>Total {{ total$ | async }} hours</div>
+    <div *ngFor="let item of (items$ | async); let index = index" class="item" (mouseover)="setActive(index)">
+      <span class="color" [style.backgroundColor]="item.color"></span>
+      <span class="percent" [matTooltip]="item.hours + 'h'">{{ item.percent }}%</span>
+      <span class="title">
+        {{ item.name || item.key }}
+      </span>
+      <button mat-button class="details" (click)="openDetails(item)">details</button>
+    </div>
+  </div>
+</div>

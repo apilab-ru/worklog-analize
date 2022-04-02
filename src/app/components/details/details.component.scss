@@ -1,0 +1,17 @@
+.root {
+  max-height: calc(100vh - 100px);
+  overflow: auto;
+}
+
+.table {
+  border-collapse: collapse;
+
+  td {
+    border: 1px solid #ccc;
+    padding: 3px 5px;
+  }
+
+  tr:nth-of-type(2n) td {
+    background: #e8eaf7;
+  }
+}

@@ -7,12 +7,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Script parser logs
-
 let list = [];
-document.querySelector('#wtcalendar-content')
-    .contentWindow.document.querySelector('#timeSheetContent')
+document.querySelector('iframe')
+    .contentWindow.document.querySelector('#reportContent')
     .querySelectorAll('tr').forEach(tr => {
-  let item = [].reduce.bind(tr.querySelectorAll('td'))((prev, item, index) => ({
+let item = [].reduce.bind(tr.querySelectorAll('td'))((prev, item, index) => ({
     ...prev, [index]: item.textContent
   }), {});
   list.push(item);

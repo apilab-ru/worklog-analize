@@ -1,0 +1,31 @@
+<div class="controls" [formGroup]="formGroup">
+  <div class="control-item">
+    <h2 class="title">Worklogs</h2>
+    <textarea class="work-logs-area" formControlName="workLogControl" placeholder="Worklogs"></textarea>
+  </div>
+
+  <div class="control-item -middle">
+    <label>
+      <mat-checkbox formControlName="groupByTask">
+        Group by task-key
+      </mat-checkbox>
+    </label>
+
+    <label>
+      <mat-checkbox formControlName="groupByComment">
+        Group by comment
+      </mat-checkbox>
+    </label>
+
+    <label>
+      <mat-checkbox formControlName="groupByRules">
+        Group by rules
+      </mat-checkbox>
+    </label>
+  </div>
+
+  <div class="control-item">
+    <h2 class="title">Grouping Rules</h2>
+    <textarea class="rules" formControlName="rules"></textarea>
+  </div>
+</div>

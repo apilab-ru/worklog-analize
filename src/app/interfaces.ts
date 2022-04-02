@@ -6,6 +6,7 @@ export interface Log {
 
 export interface LogDetail extends Log {
   deps: Log[];
+  name?: string;
   key: string;
 }
 
@@ -22,6 +23,13 @@ export interface Rule {
   field: keyof Log,
   values: string[],
   key: string;
+  name: string;
+}
+
+export interface GroupConfig {
+  groupByTask: boolean;
+  groupByComment: boolean;
+  groupByRules: boolean;
 }
 
 export interface TotalCalc {

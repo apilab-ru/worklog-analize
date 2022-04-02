@@ -1,0 +1,37 @@
+.title {
+  font-weight: 300;
+  margin: -18px -10px -10px -10px;
+  padding: 20px 8px 20px 20px;
+  font-size: 20px;
+  background: #3f51b5;
+  color: #fff;
+  border-radius: 2px;
+}
+
+.work-logs-area {
+  width: 600px;
+  height: 115px;
+}
+
+.controls {
+  display: flex;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+
+  & + & {
+    margin-left: 20px;
+  }
+
+  &.-middle {
+    align-self: center;
+  }
+}
+
+.rules {
+  width: 600px;
+  height: 100px;
+  padding: 10px;
+}
