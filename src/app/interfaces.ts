@@ -32,11 +32,6 @@ export interface GroupConfig {
   groupByRules: boolean;
 }
 
-export interface TotalCalc {
-  time: number;
-  logs: GroupedLog[];
-}
-
 export interface ImportLog {
  0: string;
  1: string;

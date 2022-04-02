@@ -6,35 +6,5 @@
   ></app-controls>
 
   <app-chart class="chart" [items]="(logs$ | async) || []"></app-chart>
-
-  <div *ngIf="boardData$ | async as boardData" class="board">
-    <h3>{{ (boardData.time / 60).toFixed(2) }}</h3>
-
-    <div class="board-data">
-      <div
-        *ngFor="let item of boardData.logs"
-        class="board-item"
-        [class.-opened]="(openedItem$ | async) === item.key"
-      >
-        <div class="board-item-data">
-          <div class="board-key" [title]="item.key">{{ item.key }}</div>
-          <!--div *ngIf="groupByIssue$ | async" class="board-issue">{{ item.issue }}</div-->
-          <div>{{ (item.time / 60).toFixed(2) }}</div>
-          <div class="percent-line">
-            <div class="percent" style="width: {{ item.percent * 2 }}%"></div>
-            <span class="percent-text">{{ item.percent.toFixed(2) }}%</span>
-          </div>
-          <button class="board-more" (click)="toggleItem(item.key)">+{{ item.logs.length }}</button>
-        </div>
-
-        <div class="board-item-list">
-          <div *ngFor="let it of item.logs">
-            {{ it.time }}
-            {{ it.comment }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 

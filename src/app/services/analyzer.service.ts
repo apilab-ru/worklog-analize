@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GroupConfig, GroupedLog, ImportLog, Log, LogDetail, Rule, TotalCalc } from '../interfaces';
+import { GroupConfig, GroupedLog, ImportLog, Log, LogDetail, Rule } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -37,44 +37,6 @@ export class AnalyzerService {
     const result = Object.values(mapLogs) as LogDetail[];
     result.sort((a, b) => b.time - a.time)
     return result;
-  }
-
-  boardGroup(list: LogDetail[] | null, groupByIssue: boolean): TotalCalc {
-    if (!list) {
-      return { time: 0, logs: [] };
-    }
-
-    const mapLogs: { [key: string]: GroupedLog } = list.reduce((prev, item) => {
-      const key = groupByIssue ? item.issue.split(' -')[0] : item.key;
-
-      // @ts-ignore
-      const prevItem = prev[key] as GroupedLog | undefined;
-
-      return {
-        ...prev,
-        [key]: {
-          issue: item.issue,
-          logs: (prevItem ? [...prevItem.logs, item] : (groupByIssue ? [item] : [...item.deps, item])),
-          time: (prevItem ? prevItem.time : 0) + item.time,
-          key: key.split('/-/')[0],
-        },
-      };
-    }, {});
-
-    const resultList = [];
-    for (let i in mapLogs) {
-      resultList.push(mapLogs[i]);
-    }
-
-    const time = resultList.reduce((prev, item) => prev + item.time, 0);
-
-    return {
-      time,
-      logs: resultList.map(item => ({
-        ...item,
-        percent: item.time / time * 100,
-      })).sort((a, b) => b.percent - a.percent),
-    };
   }
 
   private getKey(item: Log, rules: Rule[], groupConfig: GroupConfig): { key: string, name?: string } {
