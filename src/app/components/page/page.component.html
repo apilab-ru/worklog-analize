@@ -1,9 +1,5 @@
 <div class="root">
-  <app-controls
-    (groupConfigChanges)="updateField('groupConfig', $event)"
-    (logsChanges)="updateField('logs', $event)"
-    (rulesChanges)="updateField('rules', $event)"
-  ></app-controls>
+  <app-controls></app-controls>
 
   <app-chart class="chart" [items]="(logs$ | async) || []"></app-chart>
 </div>

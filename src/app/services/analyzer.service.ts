@@ -20,15 +20,17 @@ export class AnalyzerService {
   groupLogs(list: Log[], rules: Rule[], groupConfig: GroupConfig): LogDetail[] {
     const mapLogs = list.reduce((prev, item) => {
       const { key, name } = this.getKey(item, rules, groupConfig);
+      const finalKey = name || key;
+
       return {
         ...prev,
-        [key]: {
+        [finalKey]: {
           ...item,
           // @ts-ignore
-          time: (prev[key] ? prev[key].time : 0) + item.time,
+          time: (prev[finalKey] ? prev[finalKey].time : 0) + item.time,
           // @ts-ignore
-          deps: (prev[key] ? [...prev[key].deps, item] : [item]),
-          key,
+          deps: (prev[finalKey] ? [...prev[finalKey].deps, item] : [item]),
+          key: finalKey,
           name
         }
       }
@@ -37,39 +39,6 @@ export class AnalyzerService {
     const result = Object.values(mapLogs) as LogDetail[];
     result.sort((a, b) => b.time - a.time)
     return result;
-  }
-
-  private getKey(item: Log, rules: Rule[], groupConfig: GroupConfig): { key: string, name?: string } {
-    let key = '';
-    const comment = item.comment.toLowerCase().trim();
-
-    if (groupConfig.groupByTask) {
-      key += item.issue;
-    }
-
-    if (groupConfig.groupByComment) {
-      key += comment;
-    }
-
-    let name;
-    if (groupConfig.groupByRules) {
-      for(let i in rules) {
-        const rule = rules[i];
-
-        // includes
-        const field = rule.field === 'comment' ? comment : (item[rule.field] as string);
-        if (rule.values.some(value => field.includes(value))) {
-          key += rule.key;
-          name = rule.name;
-          break;
-        }
-      }
-    }
-
-    return {
-      key: key || 'develop',
-      name,
-    };
   }
 
   parserRules(rawRules: string[]): Rule[] {
@@ -95,6 +64,39 @@ export class AnalyzerService {
         name
       } as Rule
     }).filter(this.typeFilter)
+  }
+
+  private getKey(item: Log, rules: Rule[], groupConfig: GroupConfig): { key: string, name?: string } {
+    let key = '';
+    const comment = item.comment.toLowerCase().trim();
+
+    if (groupConfig.groupByTask) {
+      key += item.issue;
+    }
+
+    if (groupConfig.groupByComment) {
+      key += comment;
+    }
+
+    let name = undefined;
+    if (groupConfig.groupByRules) {
+      for(let i in rules) {
+        const rule = rules[i];
+
+        // includes
+        const field = rule.field === 'comment' ? comment : (item[rule.field] as string);
+        if (rule.values.some(value => field.includes(value))) {
+          key += rule.key;
+          name = rule.name ? rule.name.trim() : undefined;
+          break;
+        }
+      }
+    }
+
+    return {
+      key: key || 'develop',
+      name,
+    };
   }
 
   private typeFilter(it: Rule | null): it is Rule {

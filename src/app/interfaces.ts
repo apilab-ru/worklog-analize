@@ -37,3 +37,15 @@ export interface ImportLog {
  1: string;
  2: string;
 }
+
+export interface LogsUserData {
+  logs: Log[];
+  groupConfig: GroupConfig;
+  rules: Rule[];
+}
+
+export interface LogsUserRawData {
+  logs: string;
+  groupConfig: GroupConfig;
+  rules: string;
+}

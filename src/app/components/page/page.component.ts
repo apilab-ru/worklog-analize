@@ -1,20 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AnalyzerService } from '../../services/analyzer.service';
 import { combineLatest, Observable, of } from 'rxjs';
-import { GroupConfig, Log, LogDetail, Rule } from '../../interfaces';
+import { LogDetail } from '../../interfaces';
 import { catchError, map } from 'rxjs/operators';
-import { makeStore } from "../../services/store";
 import { MatSnackBar } from "@angular/material/snack-bar";
-
-const INITIAL_STATE = {
-  logs: [] as Log[],
-  groupConfig: {
-    groupByComment: true,
-    groupByTask: true,
-    groupByRules: false,
-  } as GroupConfig,
-  rules: [] as Rule[],
-};
+import { UserDataService } from "../../services/user-data.service";
 
 @Component({
   selector: 'app-page',
@@ -25,26 +15,36 @@ const INITIAL_STATE = {
 export class PageComponent implements OnInit {
   logs$: Observable<LogDetail[]>;
 
-  private store = makeStore(INITIAL_STATE);
-
   constructor(
     private analyzerService: AnalyzerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userDataService: UserDataService,
   ) {
   }
 
-  updateField<Field extends keyof typeof INITIAL_STATE>(field: Field, value: typeof INITIAL_STATE[Field]): void {
-    // @ts-ignore
-    this.store[field].next(value);
-  }
-
   ngOnInit(): void {
-    this.store.logs.subscribe(logs => console.log('xxx logs', logs))
+    const logs$ = this.userDataService.logs$.pipe(
+      map(logs => this.analyzerService.convertLogs(logs)),
+      catchError((error) => {
+        this.snackBar.open(error.toString());
+        console.error(error);
+        return of([]);
+      })
+    );
+
+    const rules$ = this.userDataService.rules$.pipe(
+      map(rules => this.analyzerService.parserRules(rules)),
+      catchError((error) => {
+        this.snackBar.open(error.toString());
+        console.error(error);
+        return of([]);
+      })
+    );
 
     this.logs$ = combineLatest([
-      this.store.logs,
-      this.store.rules,
-      this.store.groupConfig,
+      logs$,
+      rules$,
+      this.userDataService.groupConfig$,
     ]).pipe(
       map(([logs, rules, groupConfig]) => this.analyzerService.groupLogs(logs, rules, groupConfig)),
       catchError(error => {
@@ -54,7 +54,5 @@ export class PageComponent implements OnInit {
         return of([]);
       })
     );
-
-    this.logs$.subscribe(logs => console.log('xxx logs', logs))
   }
 }

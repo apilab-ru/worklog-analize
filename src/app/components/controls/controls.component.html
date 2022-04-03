@@ -7,10 +7,10 @@
         Format: [["Issue", "Comment", "Hours"]]
       </div>
     </h2>
-    <textarea class="work-logs-area" formControlName="workLogControl" placeholder="Worklogs"></textarea>
+    <textarea class="work-logs-area" formControlName="logs" placeholder="Worklogs"></textarea>
   </div>
 
-  <div class="control-item -middle">
+  <div class="control-item -middle" formGroupName="groupConfig">
     <h2>Group by</h2>
     <label>
       <mat-checkbox formControlName="groupByTask">
