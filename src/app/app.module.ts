@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { PageComponent } from './components/page/page.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { HelpComponent } from './components/help/help.component';
@@ -34,6 +34,7 @@ import { DetailsComponent } from './components/details/details.component';
     ReactiveFormsModule,
     MatDialogModule,
     MatTooltipModule,
+    FormsModule,
     RouterModule.forRoot(ROUTES)
   ],
   providers: [],

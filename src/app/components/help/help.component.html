@@ -1,6 +1,6 @@
 <div class="help">
   <div class="row">
-    <h2>Скрипт импорта</h2>
+    <h2>Import script</h2>
     <textarea class="script-export">
       let list = [];
       document.querySelector('iframe')
@@ -21,11 +21,14 @@
   </div>
 
   <div class="row">
-    <h2>Конфигурация в Jira</h2>
+    <h2>Jira fields config</h2>
+    <p>
+      domain: <input [(ngModel)]="domain">
+    </p>
     <a
       target="_blank"
-      href="https://jira.skyeng.tech/plugins/servlet/wtc-iframe?urlPath=workcalendar&decorator=atl.general&titleKey=wtc.common.labels.appName">
-      Ссылка на календарь
+      href="https://{{ domain }}/plugins/servlet/wtc-iframe?urlPath=workcalendar&decorator=atl.general&titleKey=wtc.common.labels.appName">
+      Link to calendar
     </a>
     <img class="help-image" src="assets/jira-configuration.jpg">
   </div>
